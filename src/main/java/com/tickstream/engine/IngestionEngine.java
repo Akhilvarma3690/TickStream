@@ -4,6 +4,7 @@ import com.tickstream.metrics.TickMetrics;
 import com.tickstream.model.MarketTick;
 
 import java.util.concurrent.*;
+import java.util.concurrent.locks.LockSupport;
 
 public class IngestionEngine {
     private final BlockingQueue<Runnable> ringBuffer;
@@ -13,7 +14,6 @@ public class IngestionEngine {
         this.metrics=metrics;
         //strictly sized buffer to prevent outOfMemoryError
         this.ringBuffer = new ArrayBlockingQueue<>(queueCapacity);
-
         //fixed worker pool to prevent context switching overload
         this.workerPool = new ThreadPoolExecutor(workerThreads,
                 workerThreads,
